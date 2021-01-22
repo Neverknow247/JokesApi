@@ -13,7 +13,6 @@ module.exports.findOneSingleJoke = (req, res) => {
     .catch(err => res.json({ message: "Something went wrong", error: err }));
 };
 module.exports.findRandJoke = (req, res) => {
-
   return Joke.find().then((data)=> {
     let count = data.length
     let rand = Math.floor(Math.random() * count)
