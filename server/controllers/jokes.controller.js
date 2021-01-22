@@ -1,4 +1,5 @@
 const Joke = require("../models/jokes.model");
+const jokesRoutes = require("../routes/jokes.routes");
 
 module.exports.findAllJokes = (req, res) => {
   Joke.find()
@@ -11,22 +12,20 @@ module.exports.findOneSingleJoke = (req, res) => {
     .then(oneSingleUser => res.json({ user: oneSingleUser }))
     .catch(err => res.json({ message: "Something went wrong", error: err }));
 };
-module.exports.findRandomJoke = (req, res) => {
-  Joke.count().exec(
-    function(err, count){
-    let random = Math.floor(Math.random()*count);
-    Joke.findRandomOne().skip(random).then(randomOne => res.json({user: randomOne}));
-    })
-  }
-  // Joke.findRandomOne()
-  //   .then(randomOne => res.json({ user: randomOne }))
-  //   .catch(err => res.json({ message: "Something went wrong!", error: err }));
-// }
+module.exports.findRandJoke = (req, res) => {
+
+  return Joke.find().then((data)=> {
+    let count = data.length
+    let rand = Math.floor(Math.random() * count)
+    res.status(200).send(data[rand])
+  })
+  .catch(err => res.status(500).json({ message: "Something went wrong", error: err }));
+};
 
 module.exports.createNewJoke = (req, res) => {
   Joke.create(req.body)
     .then(newlyCreatedUser => res.json({ user: newlyCreatedUser }))
-    .catch(err => res.json({ message: "Something went wrong", error: err }));
+    .catch(err => res.status(500).json({ message: "Something went wrong", error: err }));
 };
 
 module.exports.updateExistingJoke = (req, res) => {
